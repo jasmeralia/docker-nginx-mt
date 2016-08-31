@@ -25,6 +25,7 @@ RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.co
 RUN sed -i -e"s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN echo "include /etc/nginx/fcgiwrap.conf;" >> /etc/nginx/nginx.conf
+RUN cp /usr/share/doc/fcgiwrap/examples/nginx.conf /etc/nginx/fcgiwrap.conf
 RUN echo "fastcgi_param  SCRIPT_FILENAME    \$document_root\$fastcgi_script_name;" >> /etc/nginx/fastcgi_params
 RUN echo "fastcgi_param  PATH_INFO          \$fastcgi_script_name;" >> /etc/nginx/fastcgi_params
 
