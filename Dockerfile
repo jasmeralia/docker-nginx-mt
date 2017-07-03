@@ -16,6 +16,10 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
+# Configure nginx repo for more updated packages
+RUN printf "deb http://nginx.org/packages/ubuntu/ trusty nginx\ndeb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/sources.list.d/nginx.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+
 # Install NewRelic support
 ADD https://download.newrelic.com/548C16BF.gpg /newrelic.gpg
 RUN apt-key add /newrelic.gpg
