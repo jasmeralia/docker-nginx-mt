@@ -1,10 +1,15 @@
 # docker-nginx-mt
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/stormerider/docker-nginx-mt.svg)](https://img.shields.io/docker/pulls/stormerider/docker-nginx-mt.svg "Get your own image badge on shields.io")
+[![Docker Stars](https://img.shields.io/docker/stars/stormerider/docker-nginx-mt.svg)](https://img.shields.io/docker/stars/stormerider/docker-nginx-mt.svg "Get your own image badge on shields.io")
+[![Docker Layers](https://images.microbadger.com/badges/image/stormerider/docker-nginx-mt.svg)](https://microbadger.com/images/stormerider/docker-nginx-mt "Get your own image badge on microbadger.com")
+[![Docker Version](https://images.microbadger.com/badges/version/stormerider/docker-nginx-mt.svg)](https://microbadger.com/images/stormerider/docker-nginx-mt "Get your own version badge on microbadger.com")
+
 A Dockerfile that installs the latest nginx, php-apc and php-fpm, and fcgiwrap.
 
 Based off of [eugeneware](https://github.com/eugeneware/docker-wordpress-nginx)'s docker image for Wordpress and Nginx.
 
-NB: A big thanks to [jbfink](https://github.com/jbfink/docker-wordpress) who did most of the hard work on the wordpress parts!
+NB: A big thanks to [jbfink](https://github.com/jbfink/) who did most of the hard work on the wordpress parts!
 
 You can check out his [Apache version here](https://github.com/jbfink/docker-wordpress).
 

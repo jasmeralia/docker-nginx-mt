@@ -1,6 +1,14 @@
 FROM ubuntu:14.04
 MAINTAINER Morgan Blackthorne <morgan@windsofstorm.net>
 
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-url="https://github.com/stormerider/rancher-wpmu-nginx-trusty.git" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.schema-version="1.0.4.2"
+
 # Keep upstart from complaining
 RUN dpkg-divert --local --rename --add /sbin/initctl
 RUN ln -sf /bin/true /sbin/initctl
@@ -8,14 +16,20 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
+# Configure nginx repo for more updated packages
 RUN printf "deb http://nginx.org/packages/ubuntu/ trusty nginx\ndeb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/sources.list.d/nginx.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+
+# Install NewRelic support
+ADD https://download.newrelic.com/548C16BF.gpg /newrelic.gpg
+RUN apt-key add /newrelic.gpg
+RUN echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list
 
 RUN apt-get update
 RUN apt-get -y upgrade
 
 # Basic Requirements
-RUN apt-get -y install mysql-client nginx php5-fpm php5-mysql php-apc pwgen python-setuptools curl git unzip fcgiwrap php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl perlmagick
+RUN apt-get -y install mysql-client nginx php5-fpm php5-mysql php-apc pwgen python-setuptools curl git unzip fcgiwrap php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl bzip2 xz-utils zip newrelic-php5perlmagick
 
 # nginx config
 RUN sed -i -e"s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf
@@ -37,15 +51,15 @@ RUN find /etc/php5/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;
 
 # nginx site conf
 RUN rm /etc/nginx/conf.d/default.conf
-ADD ./nginx-site.conf /etc/nginx/conf.d/default.conf
+ADD ./config/nginx-site.conf /etc/nginx/conf.d/default.conf
 
 # Supervisor Config
 RUN /usr/bin/easy_install supervisor
 RUN /usr/bin/easy_install supervisor-stdout
-ADD ./supervisord.conf /etc/supervisord.conf
+ADD ./config/supervisord.conf /etc/supervisord.conf
 
 # Wordpress Initialization and Startup Script
-ADD ./start.sh /start.sh
+ADD ./scripts/start.sh /start.sh
 RUN chmod 755 /start.sh
 
 # private expose
